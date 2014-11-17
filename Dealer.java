@@ -12,7 +12,23 @@ import java.util.ArrayList;//needed for ArrayList use
 public class Dealer
 {
    //Instance variables
-   private ArrayList<Card> deck; //the dealer's deck
+   private ArrayList<Card> deck; //the dealer's deck - stores Card objects
 
    private int dealIndex; //the current deck the dealer is giving to a player
+   
+   /**
+   Constructor
+   only constructor - creates deck of 52 cards
+   */
+   
+   /**
+   shuffle()
+   randomely mixes up cards in deck and makes
+   */
+   
+   /**
+   deal(int players)
+   creates and returns a deck queue and give it x cards 
+   where x is 52 divided by the number of players
+   */
 }
