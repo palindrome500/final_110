@@ -2,7 +2,7 @@
 Matthew Pereira
 Final project
 This card class represents a standard playing card. 
-It store information on it's rank and suit
+It stores information on it's rank and suit
 */
 
 public class Card
@@ -20,9 +20,12 @@ public class Card
    static final int QUEEN = 12;
    static final int JACK = 11;
    
-   //FEILDS
+   //REQUIRED FEILDS
    private int rank;
    private int suit;
+   
+   //NODE FIELDS
+   private Card next; //next card in the deck
    
    //CONSTRUCTOR
    /**
@@ -32,8 +35,8 @@ public class Card
    {
       this.suit = suit;
       this.rank = rank;
-   }
-   
+      this.next = null;
+   }   
    
    //GETTERS
    /**
@@ -136,5 +139,23 @@ public class Card
       public boolean lessThan(Card otherCard)
    {
       return (rank < otherCard.getRank());
+   }
+   
+   //NODE METHODS*****************************
+   
+   /**
+   getNext()
+   */
+   public Card getNext()
+   {
+      return next;
+   }
+   
+   /**
+   setNext()
+   */
+   public void setNext(Card nextCard)
+   {
+      next = nextCard;
    }
 }
