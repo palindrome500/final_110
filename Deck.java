@@ -15,17 +15,52 @@ public class Deck
    /**
    Constructor
    */
+   public Deck()
+   {
+      top = bottom = null;
+   }
    
    /**
    takeCard() (dequeue)takes card from top
    returns card that was taken
    */
+   public Card takeCard() throws NullPointerException
+   {
+      Card removeCard = top;
+      
+      top = top.getNext();
+      
+      return removeCard;
+   }
    
    /**
    returnCard() (enqueue) adds card to bottom of deck
    */
+   public void returnCard(Card newCard)
+   {
+      if(!isEmpty())
+      {
+         bottom.setNext(newCard);
+      }
+      else
+      {
+         top = bottom = newCard;
+      }
+   }
    
    /**
    getSize() returns the number of cards in the deck
    */
+   public int getSize()
+   {
+      return size;
+   }
+   
+   /**
+   isEmpty()
+   */
+   public boolean isEmpty()
+   {
+      return top == null;
+   }
 }
