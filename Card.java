@@ -128,7 +128,7 @@ public class Card
    /**
    greaterThan returns true if this Card object has a greater rank than the input Card
    */
-      public boolean greaterThan(Card otherCard)
+   public boolean greaterThan(Card otherCard)
    {
       return (rank > otherCard.getRank());
    }
@@ -136,9 +136,62 @@ public class Card
    /**
    lessThan returns true if this Card object has a lesser rank than the input Card
    */
-      public boolean lessThan(Card otherCard)
+   public boolean lessThan(Card otherCard)
    {
       return (rank < otherCard.getRank());
+   }
+   
+   /**
+   getImage()
+   returns the file name of the image that corresponds to this Card
+   */
+   public String getImage()
+   {
+      String imageFile = ".jpg";
+      
+      switch(this.suit)
+      {
+         case SPADES: imageFile = "s" + imageFile;
+            break;
+         case HEARTS: imageFile = "h" + imageFile;
+            break;
+         case CLUBS: imageFile = "c" + imageFile;
+            break;
+         case DIAMONDS: imageFile = "s" + imageFile;
+            break;
+      }
+      
+      switch (this.rank)
+      {
+         case 2: imageFile = "2" + imageFile;
+            break;
+         case 3: imageFile = "3" + imageFile;
+            break;
+         case 4: imageFile = "4" + imageFile;
+            break;
+         case 5: imageFile = "5" + imageFile;
+            break;
+         case 6: imageFile = "6" + imageFile;
+            break;
+         case 7: imageFile = "7" + imageFile;
+            break;
+         case 8: imageFile = "8" + imageFile;
+            break;
+         case 9: imageFile = "9" + imageFile;
+            break;
+         case 10: imageFile = "10" + imageFile;
+            break;
+         case ACE: imageFile = "ace" + imageFile;
+            break;
+         case JACK: imageFile = "jack" + imageFile;
+            break;
+         case QUEEN: imageFile = "queen" + imageFile;
+            break;
+         case KING: imageFile = "king" + imageFile;
+            break;
+      }
+      
+      return imageFile;
    }
    
    //NODE METHODS*****************************
