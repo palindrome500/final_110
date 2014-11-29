@@ -191,7 +191,7 @@ public class Card
             break;
       }
       
-      return "cardPics/" + imageFile;
+      return "cardPics//" + imageFile;
    }
    
    //NODE METHODS*****************************
