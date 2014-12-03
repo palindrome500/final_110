@@ -22,62 +22,64 @@ import java.awt.event.*;
 public class WarGame
 {
    //CONSTANTS
-   static final int HALF_DECK = 26, FULL_DECK = 52;
-   static final String BLUE_WINS = "BLUE WINS!", RED_WINS = "RED WINS!";
+   static public final int HALF_DECK = 26, FULL_DECK = 52;
+   static public final String BLUE_WINS = "BLUE WINS!", RED_WINS = "RED WINS!";
    
    //Class variables
+   private boolean endGame = false, isTie = false;
+   private int blueWin = 0, redWin = 0;
+   private int round = 0;
+   private Dealer dealer; //Dealer deck
+   private Deck blueDeck, redDeck; //Main player decks
+   private Discard blueWar, redWar; //WAR decks
+   private Discard blueDiscard, redDiscard;//Discard piles for each player
+   private Card blueInPlay, redInPlay; //Represents the cards in play
+   private String winner = "";
+   private Scanner keyboard = new Scanner(System.in); //Get keyboard input
+   private String proceed; //press enter to continue
+      
    
-   public static void main(String [] args)
+   /**
+   Constructor
+   */
+   public WarGame()
    {
-      //MAIN varirables#########################
-      boolean endGame = false, isTie;
-      int blueWin = 0, redWin = 0;
-      int round = 0;
-      Card blueInPlay, redInPlay; //Represents the cards in play
-      String winner = "";
-      Scanner keyboard = new Scanner(System.in); //Get keyboard input
-      String proceed; //press enter to continue
-      
-      
       //PRE_GAME SET-UP********************************************
       //Make dealer deck
-      Dealer dealer = new Dealer();
+      dealer = new Dealer();
       
       //Shuffle dealer deck
       dealer.shuffle();
       
       //Create player decks
-      Deck blueDeck = new Deck();
-      Deck redDeck = new Deck();
+      blueDeck = new Deck();
+      redDeck = new Deck();
       
       //Deal out half of dealer deck to each player
       dealCards(dealer, blueDeck);
       dealCards(dealer, redDeck);
       
       //Create discard pile for each player
-      Discard blueDiscard = new Discard();
-      Discard redDiscard = new Discard();
+      blueDiscard = new Discard();
+      redDiscard = new Discard();
       
       //Create WAR pile for each player
-      Discard blueWar = new Discard();
-      Discard redWar = new Discard();
+      blueWar = new Discard();
+      redWar = new Discard();
       
+   }//END CONSTRUCTOR
       
-      //CREATE GUI
-      WarGUI window = new WarGUI();
-      
-      
-      //Start MAIN GAME LOOP //While winner == false &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
-      while(!endGame)
-      {
-         
+   
+   
+   /**
+   takeTurn()
+   */  
+   public void takeTurn()
+   { 
          //If there are still cards to draw
          if(!blueDeck.isEmpty() && !redDeck.isEmpty())
          {
-            //Get player's ok for next draw
-            round++;
-            System.out.println("Press enter to draw a card");
-            proceed = keyboard.next();
+            round++;//Count up one round
             
             //Each player draws a card
             blueInPlay = blueDeck.takeCard();
@@ -112,7 +114,7 @@ public class WarGame
                   System.out.println("ERROR IN COMPARING CARDS");
                
                //Update GUI
-               window.update(isTie, blueDiscard.getSize(), redDiscard.getSize(), blueWar.getSize(), redWar.getSize(), blueInPlay, redInPlay, blueDeck.getSize(), redDeck.getSize(), round, winner);
+               //window.update(isTie, blueDiscard.getSize(), redDiscard.getSize(), blueWar.getSize(), redWar.getSize(), blueInPlay, redInPlay, blueDeck.getSize(), redDeck.getSize(), round, winner);
                
             }//end if not a tie
             
@@ -122,52 +124,6 @@ public class WarGame
             {
                isTie = true;
                
-               //While there are only ties
-               while(isTie)
-               {
-                  
-                  //place tieing cards in WAR piles
-                  blueWar.returnCard(blueInPlay);
-                  redWar.returnCard(redInPlay);
-                     
-                     //Draw new card for each player
-                     blueInPlay = blueDeck.takeCard();
-                     redInPlay = redDeck.takeCard();
-                     
-                     //If cards don't tie
-                     if(!(blueInPlay.equals(redInPlay)))
-                     {
-                        //find winner  
-                        //give in-Play cards and all WAR pile cards to winner's discard deck
-                        if(blueInPlay.greaterThan(redInPlay))
-                        {
-                           blueDiscard.returnCard(blueInPlay);
-                           blueDiscard.returnCard(redInPlay);
-                           
-                           while(!blueWar.isEmpty() && !redWar.isEmpty())
-                              {
-                                 blueDiscard.returnCard(blueWar.takeCard());
-                                 blueDiscard.returnCard(redWar.takeCard());
-                              }
-                        }
-                        
-                        else if(redInPlay.greaterThan(blueInPlay))
-                        {
-                           redDiscard.returnCard(blueInPlay);
-                           redDiscard.returnCard(redInPlay);
-                           
-                           while(!blueWar.isEmpty() && !redWar.isEmpty())
-                              {
-                                 redDiscard.returnCard(blueWar.takeCard());
-                                 redDiscard.returnCard(redWar.takeCard());
-                              }  
-                        }
-                        
-                        //isTie = false
-                        isTie= false;
-                     
-                     }//Else is tie, continue loop
-               }//END WAR LOOP
             }//end else a tie
          }//end if still cards
          
@@ -176,9 +132,13 @@ public class WarGame
          {
             endGame = true;
          }
-         
-      }//END MAIN GAME LOOP
-      
+   }//END TAKE TURN
+   
+   /**
+   printWinner()
+   */ 
+   public void printWinner()
+   { 
       //Determine winner (the one with the larger discard pile)
       if(blueDiscard.getSize() > redDiscard.getSize())
       {
@@ -195,10 +155,62 @@ public class WarGame
          System.out.println("It's a tie");
       }
       
-   }
+   }//END PRINT WINNER
+   
    
    /**
-   dealCards gives cards to the player
+   doWar() puts the game into war
+   used when battle ends in tie
+   */
+   public void doWar()
+   {
+      //place tieing cards in WAR piles
+      blueWar.returnCard(blueInPlay);
+      redWar.returnCard(redInPlay);
+
+      //Draw new card for each player
+      blueInPlay = blueDeck.takeCard();
+      redInPlay = redDeck.takeCard();
+
+      //If cards don't tie
+      if(!(blueInPlay.equals(redInPlay)))
+      {
+         //find winner
+         //give in-Play cards and all WAR pile cards to winner's discard deck
+         if(blueInPlay.greaterThan(redInPlay))
+         {
+            blueDiscard.returnCard(blueInPlay);
+            blueDiscard.returnCard(redInPlay);
+
+            while(!blueWar.isEmpty() && !redWar.isEmpty())
+            {
+               blueDiscard.returnCard(blueWar.takeCard());
+               blueDiscard.returnCard(redWar.takeCard());
+            }
+         }
+
+         else if(redInPlay.greaterThan(blueInPlay))
+         {
+            redDiscard.returnCard(blueInPlay);
+            redDiscard.returnCard(redInPlay);
+
+            while(!blueWar.isEmpty() && !redWar.isEmpty())
+            {
+               redDiscard.returnCard(blueWar.takeCard());
+               redDiscard.returnCard(redWar.takeCard());
+            }
+         }
+
+         //isTie = false
+         isTie= false;
+
+      }//Else is tie, continue loop
+
+   }
+   
+   
+   /**
+   dealCards() gives cards to the player
    */
    public static Deck dealCards(Dealer dealer, Deck player)
    {
@@ -208,6 +220,113 @@ public class WarGame
       }
       
       return player;
+   }
+   
+   
+   //GETTERS #######################################################################
+   
+   /**
+   isTie()
+   */
+   public boolean isTie()
+   {
+      return this.isTie;
+   }
+   
+   /**
+   isEndGame() returns endGame
+   */
+   public boolean isEndGame()
+   {
+      return this.endGame;
+   }
+   
+   /**
+   getRound()
+   */
+   public int getRound()
+   {
+      return round;
+   }
+   
+   /**
+   getBlueSize()
+   */
+   public Deck getBlueDeck()
+   {
+      return blueDeck;
+   }
+   
+   /**
+   getRound()
+   */
+   public Deck getRedDeck()
+   {
+      return redDeck;
+   }
+   
+   /**
+   getWinner()
+   returns the winner of the last battle
+   */
+   public String getWinner()
+   {
+      return winner;
+   }
+   
+   /**
+   getBlueDiscard()
+   */
+   public Discard getBlueDiscard()
+   {
+      return blueDiscard;
+   }
+   
+   /**
+   getRedDiscard()
+   */
+   public Discard getRedDiscard()
+   {
+      return redDiscard;
+   }
+   
+   /**
+   getBlueWar()
+   */
+   public Discard getBlueWar()
+   {
+      return blueWar;
+   }
+   
+   /**
+   getRedWar()
+   */
+   public Discard getRedWar()
+   {
+      return redWar;
+   }
+   
+   /**
+   getBlueCard()
+   */
+   public Card getBlueCard()
+   {
+      return blueInPlay;
+   }
+   
+   /**
+   getRedCard()
+   */
+   public Card getRedCard()
+   {
+      return redInPlay;
+   }
+   
+   
+   //TESTING
+   public static void main(String [] args)
+   {
+      WarGame game = new WarGame();
    }
    
 }
