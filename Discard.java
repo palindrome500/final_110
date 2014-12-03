@@ -40,6 +40,8 @@ public class Discard extends Deck
       {
          top = newCard;
       }
+      
+      size++;
    }
    
    /**
