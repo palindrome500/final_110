@@ -23,12 +23,17 @@ public class Deck
    /**
    takeCard() (dequeue)takes card from top
    returns card that was taken
+   taken card is removed from deck
    */
    public Card takeCard() throws NullPointerException
    {
       Card removeCard = top;
       
       top = top.getNext();
+      
+      size--;
+      
+      removeCard.setNext(null);
       
       return removeCard;
    }
@@ -38,14 +43,17 @@ public class Deck
    */
    public void returnCard(Card newCard)
    {
-      if(!isEmpty())
+      if(top != null) //If NOT empty
       {
          bottom.setNext(newCard);
+         bottom = newCard;
       }
       else
       {
          top = bottom = newCard;
       }
+      
+      size++;
    }
    
    /**
