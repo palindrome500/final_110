@@ -1,6 +1,8 @@
 final_110
 =========
 
-Final project for CS 110 (second attempt)
+Final project for CS 110
 
-This is a test of Github functionallity
+Requires CardPics folder in working directory
+
+Program can be run from driver or gui class
