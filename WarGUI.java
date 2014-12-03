@@ -11,19 +11,23 @@ import javax.swing.*;
 import java.io.*;//file I/O
 import java.awt.event.*;
 
+
+
 public class WarGUI extends JFrame
 {
+   //important objects
+   private WarGame game;
    
    //Reused images
-   Icon faceDown = new ImageIcon("cardPics//back.jpg");
+   private Icon faceDown = new ImageIcon("cardPics//back.jpg");
    
    //Variable feilds
-   JLabel roundLabel, winnerLabel;
-   JButton warButton, battleButton;
-   JLabel blueCardLabel, redCardLabel;
-   JLabel blueDeckLabel, redDeckLabel;
-   JLabel blueWarLabel, redWarLabel;
-   JLabel blueBattles, redBattles;
+   private JLabel roundLabel, winnerLabel;
+   private JButton warButton, battleButton;
+   private JLabel blueCardLabel, redCardLabel;
+   private JLabel blueDeckLabel, redDeckLabel;
+   private JLabel blueWarLabel, redWarLabel;
+   private JLabel blueBattles, redBattles;
    
  
    /**
@@ -32,17 +36,17 @@ public class WarGUI extends JFrame
    public WarGUI()
    {
       
+      //Create a game of war
+      game = new WarGame();
       
       //Set up main window
-      JFrame window = new JFrame();
+      setTitle("The Game of War");
       
-      window.setTitle("The Game of War");
+      setLayout(new BorderLayout());
       
-      window.setLayout(new BorderLayout());
+      setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
       
-      window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-      
-      window.setVisible(true);
+      setVisible(true);
       
       //window contents ###############
       //NORTH Panel
@@ -51,7 +55,7 @@ public class WarGUI extends JFrame
       roundLabel = new JLabel("Round: 1");
       northPanel.add(roundLabel, JLabel.CENTER);
       
-      window.add(northPanel, BorderLayout.NORTH);
+      add(northPanel, BorderLayout.NORTH);
       
       
       //WEST
@@ -64,7 +68,7 @@ public class WarGUI extends JFrame
       blueBattles = new JLabel(" Cards Won: 0");
       westPanel.add(blueBattles);
 
-      window.add(westPanel, BorderLayout.WEST);
+      add(westPanel, BorderLayout.WEST);
       
       
       //EAST
@@ -77,7 +81,7 @@ public class WarGUI extends JFrame
       redBattles = new JLabel(" Cards Won: 0");
       eastPanel.add(redBattles);
 
-      window.add(eastPanel, BorderLayout.EAST);
+      add(eastPanel, BorderLayout.EAST);
       
       
       //CENTER
@@ -88,6 +92,7 @@ public class WarGUI extends JFrame
       redCardLabel = new JLabel(faceDown);
       blueWarLabel = new JLabel("War Zone: 0");
       warButton = new JButton("War Button");
+      warButton.addActionListener(new ButtonListener());
       warButton.setEnabled(false);
       redWarLabel = new JLabel("War Zone: 0");
       
@@ -99,25 +104,28 @@ public class WarGUI extends JFrame
       centerPanel.add(warButton);
       centerPanel.add(redWarLabel);
       
-      window.add(centerPanel, BorderLayout.CENTER);
+      add(centerPanel, BorderLayout.CENTER);
       
       
       //SOUTH
       JPanel southPanel = new JPanel();
       
       battleButton = new JButton("BATTLE!");
+      battleButton.addActionListener(new ButtonListener());
       southPanel.add(battleButton);
-      window.add(southPanel, BorderLayout.SOUTH);
+      add(southPanel, BorderLayout.SOUTH);
       
       
       //Pack window
-      window.pack();
-   }
+      pack();
+      
+   }//END CONSTRUCTOR
    
    
    //Update board
-   public void update(boolean war, int blueWin, int redWin, int blueWar, int redWar, 
-         Card blueCard, Card redCard, int blueDeck, int redDeck, int round, String winner)
+   public void update(boolean war, Discard blueWin, Discard redWin, 
+         Discard blueWar, Discard redWar, 
+         Card blueCard, Card redCard, Deck blueDeck, Deck redDeck, int round, String winner)
    {
       if(!war)
       {
@@ -140,16 +148,51 @@ public class WarGUI extends JFrame
       blueCardLabel.setIcon(new ImageIcon(blueCard.getImage()));
       redCardLabel.setIcon(new ImageIcon(redCard.getImage()));
       
-      blueDeckLabel.setText("Blue's Deck: " + blueDeck);
-      redDeckLabel.setText("Red's Deck: " + redDeck);
+      blueDeckLabel.setText("Blue's Deck: " + blueDeck.getSize());
+      redDeckLabel.setText("Red's Deck: " + redDeck.getSize());
       
-      blueWarLabel.setText("War Zone: " + blueWar);
-      redWarLabel.setText("War Zone: " + redWar);
+      blueWarLabel.setText("War Zone: " + blueWar.getSize());
+      redWarLabel.setText("War Zone: " + redWar.getSize());
       
-      blueBattles.setText(" Cards Won: " + blueWin);
-      redBattles.setText(" Cards Won: " + redWin);
+      blueBattles.setText(" Cards Won: " + blueWin.getSize());
+      redBattles.setText(" Cards Won: " + redWin.getSize());
    }
    
-   //
+   
+   class ButtonListener implements ActionListener{
+      public void actionPerformed (ActionEvent e) {
+         JButton b = (JButton)(e.getSource());
+         
+         //Battle button press
+         if (e.getSource() == battleButton)
+         {
+            //take turn
+            game.takeTurn();
+            
+            //update gui *******IN PROGRESS**********
+            update(game.isTie(), game.getBlueDiscard(), game.getRedDiscard(), 
+               game.getBlueWar(), game.getRedWar(), game.getBlueCard(), game.getRedCard(), 
+               game.getBlueDeck(), game.getRedDeck(), game.getRound(), game.getWinner());
+         }
+         
+         if (e.getSource() == warButton)
+         {
+            //take turn
+            game.doWar();
+            
+            //update gui *******IN PROGRESS**********
+            update(game.isTie(), game.getBlueDiscard(), game.getRedDiscard(), 
+               game.getBlueWar(), game.getRedWar(), game.getBlueCard(), game.getRedCard(), 
+               game.getBlueDeck(), game.getRedDeck(), game.getRound(), game.getWinner());
+         }
+      }  
+   }
+   
+   
+   //main method
+   public static void main(String [] args)
+   {
+      WarGUI gui = new WarGUI();
+   }
    
 }
