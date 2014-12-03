@@ -5,11 +5,6 @@ This class will work out the main logic for the game of War
 The game is run from here
 */
 
-/**
-BUG LOG
-
--DECKS ONLY TAKE TWO CARDS
-*/
 
 //NEEDED PACKAGES
 import java.util.*;
