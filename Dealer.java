@@ -71,7 +71,7 @@ public class Dealer
    deal(int cards)
    creates and returns a card from the index indicated by dealIndex
    */
-   public Card deal()
+   public Card deal() throws IndexOutOfBoundsException
    {
       //try
       //{
@@ -108,8 +108,25 @@ public class Dealer
       return dealIndex;
    }
    
-//    public static void main(String [] args)
-//    {
-//       Dealer dealer = new Dealer();
-//    }
+    //TESTING   
+   public static void main(String [] args)
+   {
+      Dealer dealer = new Dealer();
+      dealer.shuffle();
+      
+      Card card1 = dealer.deal();
+      
+      System.out.println(dealer.getDealIndex());
+      
+      
+      Card card2 = dealer.deal();
+      
+      System.out.println(dealer.getDealIndex());
+      
+      Card card3 = dealer.deal();
+      
+      System.out.println(dealer.getDealIndex());
+           
+           
+   }
 }
